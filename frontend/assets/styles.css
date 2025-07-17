@@ -1,0 +1,1454 @@
+/* General Styles */
+:root {
+    --black-bg: #1a1a1a;
+    --white-text: #ffffff; /* Remains white for elements on dark backgrounds */
+    --blue-hover: #007bff;
+    --orange-highlight: #ff6600; /* Main orange color */
+    --light-gray: #ccc;
+    --dark-gray: #333; /* Good for general text on white background, and borders */
+    --body-bg-white: #ffffff; /* Explicitly defined for clarity */
+    --card-bg: #181818; /* Original dark background for cards/sections (not currently used for article cards) */
+    --dark-text: #222; /* New: A darker text color for elements on white backgrounds */
+    --orange-button-hover: #e65c00; /* Slightly darker orange for button hover */
+    --button-shadow: rgba(255, 102, 0, 0.4); /* Shadow for orange buttons */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Default body background: This will apply to articles.html and article.html */
+    background-color: var(--body-bg-white);
+    color: var(--dark-text); /* Adjusted for readability on white background */
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures footer sticks to bottom */
+}
+
+/* Body background for index.html only (requires <body class="index-page"> in index.html) */
+body.index-page {
+    background-color: var(--black-bg); /* Explicitly Dark background for index.html */
+    color: var(--white-text); /* Light text for readability on dark background */
+}
+
+/* Ensure specific elements on index.html inherit dark page text color */
+body.index-page .main-content {
+    color: var(--white-text);
+}
+
+body.index-page .story-sways-info p,
+body.index-page .story-sways-info ul,
+body.index-page .story-sways-info ol {
+    color: var(--white-text);
+}
+
+/* Updated: Headings on index.html body to be blue */
+body.index-page h1,
+body.index-page h2,
+body.index-page h3,
+body.index-page h4,
+body.index-page h5,
+body.index-page h6 {
+    color: var(--blue-hover); /* Changed to blue */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    color: var(--blue-hover);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+/* Default heading colors for pages with white body */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--dark-text); /* Default for pages with white body */
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+/* Header */
+.header {
+    background-color: var(--black-bg);
+    padding: 15px 0;
+    border-bottom: 1px solid var(--dark-gray);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.logo img {
+    height: 110px;
+    width: auto;
+}
+
+/* Navbar */
+.navbar {
+    flex-grow: 1;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-link {
+    display: block;
+    padding: 10px 0;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--white-text);
+}
+
+/* --- MODIFIED: NAV LINK HOVER FOR CAREER & CONTACT --- */
+/* This will apply to all nav links, including Career and Contact */
+.nav-link:hover {
+    color: var(--blue-hover); /* Changed to blue */
+}
+/* --- END MODIFIED --- */
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: var(--orange-highlight);
+    left: 0;
+    bottom: -5px;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Dropdown Menus (Hover) */
+.dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--dark-gray);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    z-index: 1000;
+    display: none;
+    border-top: 2px solid var(--orange-highlight);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+}
+
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu li a {
+    padding: 10px 15px;
+    display: block;
+    white-space: nowrap;
+    color: var(--white-text);
+}
+
+.dropdown-menu li a:hover {
+    background-color: var(--body-bg-white); /* Changed for better visibility on hover */
+    color: var(--blue-hover);
+}
+
+/* Header Right - Flags and Search */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-shrink: 0;
+}
+
+.language-flags {
+    display: flex;
+    gap: 10px;
+}
+
+.language-flags .flag {
+    width: 28px;
+    height: auto;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: opacity 0.2s ease, transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+    opacity: 0.7;
+}
+
+.language-flags .flag:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.language-flags .flag.active-lang {
+    border: 2px solid var(--blue-hover);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Search Icon (Button) in Header - Styled Cute and Cool */
+.search-icon {
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--white-text); /* Icon color */
+    background-color: var(--orange-highlight); /* Orange background */
+    padding: 10px 12px; /* Increased padding to make it a better button */
+    border-radius: 50%; /* Make it perfectly round */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex; /* To center icon */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px var(--button-shadow); /* Soft shadow */
+}
+
+.search-icon:hover {
+    background-color: var(--orange-button-hover); /* Darker orange on hover */
+    transform: translateY(-2px) scale(1.05); /* Slight lift and scale */
+    box-shadow: 0 6px 12px var(--button-shadow); /* Enhanced shadow on hover */
+}
+
+.header-search-input {
+    display: none;
+    padding: 10px 15px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 20px;
+    margin-left: 10px;
+    width: 200px;
+    transition: width 0.3s ease-in-out, border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #2a2a2a;
+    color: var(--white-text);
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.header-search-input::placeholder {
+    color: var(--light-gray);
+}
+
+.header-search-input:focus {
+    border-color: var(--blue-hover);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    outline: none;
+}
+
+.header-search-input.active {
+    display: inline-block;
+    width: 250px;
+}
+
+.search-container-header {
+    display: flex;
+    align-items: center;
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white-text);
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 10px;
+    margin-right: 15px;
+}
+
+/* Main Content Area */
+.main-content {
+    display: flex;
+    gap: 30px;
+    padding: 40px 20px;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-grow: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    color: var(--dark-text); /* Default for pages with white body */
+}
+
+.story-sways-info {
+    flex: 1;
+}
+
+/* Ad Placeholder - hidden but retains space for layout consistency if needed */
+.ad-placeholder {
+    /* Hides ads but keeps their layout space */
+    opacity: 0;
+    pointer-events: none; /* Prevents interaction with the hidden element */
+
+    flex: 0 0 250px; /* Set a fixed width for the sidebar */
+    padding-left: 20px;
+    text-align: center; /* Center ad content */
+}
+
+.ad-placeholder img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px; /* Slightly rounded corners for ad images */
+    display: block; /* Ensures image doesn't have extra space below it */
+    margin-bottom: 15px; /* Space between multiple ads if present */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.ad-placeholder p {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0;
+}
+
+.story-sways-info h1 {
+    color: var(--orange-highlight);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.story-sways-info h2 {
+    color: var(--blue-hover);
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--dark-gray);
+    padding-bottom: 5px;
+}
+
+.story-sways-info p,
+.story-sways-info ul,
+.story-sways-info ol {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: var(--dark-text);
+}
+
+.story-sways-info ul,
+.story-sways-info ol {
+    padding-left: 25px;
+}
+
+.story-sways-info li {
+    margin-bottom: 10px;
+}
+
+.story-sways-info li strong {
+    color: var(--orange-highlight);
+}
+
+/* Email Subscription Section (Container Styling) */
+.email-subscribe-section {
+    background-color: var(--black-bg);
+    padding: 50px 20px;
+    margin-top: 50px;
+    text-align: center;
+    border-top: 1px solid var(--dark-gray);
+    border-bottom: 1px solid var(--dark-gray);
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.2);
+    color: var(--white-text);
+}
+
+.email-subscribe-section h2 {
+    color: #FFA500;
+    font-size: 2.8em;
+    margin-bottom: 15px;
+    text-shadow: 0 0 8px rgba(255, 165, 0, 0.4);
+}
+
+.email-subscribe-section p {
+    color: var(--light-gray);
+    font-size: 1.1em;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+}
+
+/* MailerLite Form Specific Overrides */
+.ml-form-embedContainer {
+    background: none !important;
+    padding: 0 !important;
+    width: auto !important;
+    font-family: inherit !important;
+    color: var(--white-text) !important;
+}
+
+.ml-form-embedContainer form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.ml-form-embedContainer input.form-control[type="email"] {
+    flex-grow: 1;
+    min-width: 250px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--dark-gray);
+    background-color: #2a2a2a;
+    color: var(--white-text);
+    font-size: 1.1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ml-form-embedContainer input.form-control[type="email"]:focus {
+    border-color: var(--blue-hover);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    outline: none;
+}
+
+.ml-form-embedContainer button.primary {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--orange-highlight);
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px var(--button-shadow); /* Soft shadow for submit button */
+}
+
+.ml-form-embedContainer button.primary:hover {
+    background-color: var(--orange-button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--button-shadow); /* Enhanced shadow on hover */
+}
+
+/* Hide MailerLite's default response messages if you want to handle with JS or other */
+.ml-form-successBody, .ml-form-errorBody {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+}
+.ml-form-successBody {
+    color: #28a745;
+}
+.ml-form-errorBody {
+    color: #dc3545;
+}
+
+.ml-form-embedSubmit .grecaptcha-badge {
+    display: none !important;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--black-bg);
+    padding: 30px 0;
+    text-align: center;
+    border-top: 1px solid var(--dark-gray);
+    margin-top: 60px; /* Ensure space above footer */
+    color: var(--light-gray);
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.footer-links a,
+.social-media a {
+    font-size: 1.1em;
+    color: var(--white-text);
+}
+
+.footer-links a {
+    margin: 0;
+}
+
+.social-media {
+    display: flex;
+    gap: 20px;
+}
+
+/* --- MODIFIED: SOCIAL MEDIA ICONS HOVER --- */
+.social-media .fab {
+    font-size: 1.8em;
+    color: var(--white-text);
+    transition: color 0.3s ease;
+}
+
+.social-media .fab:hover {
+    color: var(--blue-hover); /* Blue hover color */
+}
+/* --- END MODIFIED --- */
+
+.newsletter {
+    flex-grow: 1;
+    text-align: right;
+}
+
+.newsletter p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: var(--light-gray);
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.newsletter-form input[type="email"] {
+    padding: 10px 15px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: var(--white-text);
+    width: 220px;
+    font-size: 1em;
+}
+
+.newsletter-form input[type="email"]::placeholder {
+    color: var(--light-gray);
+}
+
+.orange-button {
+    background-color: var(--orange-highlight);
+    color: var(--white-text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px var(--button-shadow); /* Soft shadow */
+}
+
+.orange-button:hover {
+    background-color: var(--orange-button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--button-shadow); /* Enhanced shadow on hover */
+}
+
+/* Copyright Section */
+.copyright {
+    padding-top: 20px;
+    border-top: 1px solid var(--dark-gray);
+    color: var(--light-gray);
+    font-size: 0.9em;
+    margin-top: 20px;
+}
+
+
+/* Public Article Display (articles.html) */
+.articles-page h1 {
+    text-align: center;
+    color: var(--blue-hover);
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 3.5em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+/* --- ARTICLES PAGE LAYOUT (articles.html) --- */
+.articles-layout {
+    display: flex; /* Use flexbox for main content and sidebar */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 30px; /* Space between main content and sidebar */
+    padding: 20px;
+    max-width: 1200px; /* Adjust as needed */
+    margin: 20px auto; /* Center the layout */
+    box-sizing: border-box; /* Include padding in the width */
+}
+
+.articles-page .main-articles-content {
+    flex: 3; /* Takes up more space */
+    min-width: 60%; /* Ensures it doesn't get too small */
+    order: 1; /* Main content first in source order */
+}
+
+/* --- POPULAR CATEGORIES CARD (Right Side, Top) - Unified, Compact, No Scroll --- */
+/* This style applies to both articles.html and and is now specifically hidden on article.html below */
+.popular-categories-sidebar {
+    flex: 1; /* Takes up less space */
+    min-width: 280px; /* Minimum width for the sidebar */
+    max-width: 300px; /* Max width to keep it consistent and compact */
+    order: 2; /* Explicitly place it after the main content initially for flexbox */
+    background-color: var(--body-bg-white); /* Card background matching body */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px; /* Space between cards */
+    height: 250px; /* Adjusted height to show more categories while staying compact */
+    overflow: hidden; /* Hide overflow, no scrolling */
+}
+
+.popular-categories-sidebar h3 {
+    margin-top: 0;
+    color: var(--blue-hover); /* Blue color for sidebar heading */
+    font-size: 1.2em; /* Smaller for compactness */
+    border-bottom: 1px solid #eee; /* Light separator */
+    padding-bottom: 8px; /* Reduced padding */
+    margin-bottom: 12px; /* Reduced margin */
+    text-align: left;
+}
+
+.popular-categories-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; /* Ensure no default margin affecting height */
+}
+
+.popular-categories-sidebar ul li {
+    margin-bottom: 6px; /* Reduced margin for compactness */
+}
+
+.popular-categories-sidebar ul li a {
+    text-decoration: none;
+    color: var(--dark-text); /* Link color for categories */
+    font-weight: bold;
+    display: block; /* Make the whole area clickable */
+    padding: 3px 0; /* Reduced padding */
+    transition: color 0.3s ease, background-color 0.3s ease;
+    font-size: 0.9em; /* Smaller font for compactness */
+}
+
+.popular-categories-sidebar ul li a:hover {
+    color: var(--blue-hover); /* Blue on hover */
+    background-color: #f0f0f0; /* Light background on hover */
+    border-radius: 4px;
+}
+
+/* Ad Placeholder in articles.html, positioned after popular categories */
+.articles-layout .ad-placeholder {
+    order: 3; /* Placed after popular categories */
+    /* Hides ads but keeps their layout space on desktop */
+    opacity: 0;
+    pointer-events: none;
+}
+/* --- END POPULAR CATEGORIES --- */
+
+
+/* --- SEARCH BAR BELOW LATEST ARTICLES (articles.html) --- */
+.articles-page .search-section {
+    order: 4; /* Place after main content, popular categories, and ads */
+    width: 100%; /* Take full width */
+    margin-top: 30px; /* Space from content above */
+    padding: 25px;
+    background-color: var(--black-bg); /* Dark background for search section */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Center content */
+    display: flex; /* Use flex for input and button alignment */
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between elements */
+}
+
+.articles-page .search-section h2 {
+    color: var(--orange-highlight); /* Orange heading for search */
+    margin-bottom: 15px;
+    font-size: 1.8em;
+    border-bottom: none; /* Remove border from heading */
+    padding-bottom: 0;
+}
+
+.articles-page .search-form {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 500px; /* Limit search form width */
+}
+
+.articles-page .search-input {
+    flex-grow: 1;
+    padding: 15px 20px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #2a2a2a;
+    color: var(--white-text);
+    font-size: 1.1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.articles-page .search-input::placeholder {
+    color: var(--light-gray);
+}
+
+.articles-page .search-input:focus {
+    border-color: var(--blue-hover);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    outline: none;
+}
+
+.articles-page .search-button {
+    background-color: var(--blue-hover); /* Blue search button */
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.articles-page .search-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+}
+/* --- END SEARCH BAR REPOSITIONED --- */
+
+
+/* --- MODIFIED: ARTICLE GRID FOR 3 COLUMNS --- */
+.articles-grid {
+    display: grid;
+    /* Adjusted min-width for 3 columns on larger screens */
+    /* minmax(300px, 1fr) allows cards to shrink to 300px before wrapping */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px; /* Space between article cards */
+    margin-top: 20px;
+}
+/* --- END MODIFIED --- */
+
+/* Updated: Article cards hidden but space maintained on specific pages */
+/* Assuming 'popular categories' might be a separate section or part of the 'story-sways-info' */
+/* If these cards are specifically for a section where you want them hidden but space shown,
+    you'll need to wrap them in a container that has 'visibility: hidden;' or apply it to the cards directly. */
+.hidden-cards-section { /* You need to add this class to the HTML div containing these cards */
+    opacity: 0; /* Hides the content */
+    pointer-events: none; /* Prevents interaction */
+    flex: 0 0 250px; /* Or whatever width these cards would normally take up */
+    /* Add other flex properties if it's a sibling in a flex container */
+}
+
+.article-card {
+    background-color: var(--body-bg-white);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    color: var(--dark-text);
+}
+
+.article-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--orange-highlight);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.article-card img, .article-card iframe, .article-card video {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.article-card:hover img, .article-card:hover video {
+    transform: scale(1.03);
+}
+
+.article-card img.placeholder {
+    object-fit: contain;
+    background-color: #eee;
+}
+
+.article-card h3 {
+    color: var(--blue-hover);
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.7em;
+    line-height: 1.4;
+    text-shadow: none;
+}
+
+.article-card p {
+    flex-grow: 1;
+    margin-bottom: 20px;
+    color: var(--dark-text);
+    line-height: 1.7;
+    font-size: 0.95em;
+}
+
+.article-card small {
+    color: #666;
+    margin-top: auto;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: bold;
+}
+
+/* Read More Button (on article cards) - Styled Cute and Cool */
+.read-more-button {
+    display: inline-block;
+    background-color: var(--orange-highlight);
+    color: var(--white-text);
+    padding: 12px 25px; /* Slightly larger padding */
+    border-radius: 8px; /* More rounded corners */
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 15px;
+    align-self: flex-start; /* Keeps it aligned left in the card */
+    box-shadow: 0 4px 8px var(--button-shadow); /* Soft shadow */
+    text-transform: uppercase; /* Make text uppercase for a stronger look */
+    letter-spacing: 1px;
+}
+
+.read-more-button:hover {
+    background-color: var(--orange-button-hover);
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 6px 12px var(--button-shadow); /* Enhanced shadow on hover */
+}
+
+
+/* Specific styles for the single article page */
+/* --- SINGLE ARTICLE PAGE LAYOUT (article.html) --- */
+.single-article-layout {
+    display: flex; /* Use flexbox for main article and sidebar */
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    box-sizing: border-box;
+    align-items: flex-start; /* Align content at the top */
+}
+
+.main-article-content { /* Existing .single-article-content renamed for clarity */
+    flex: 3; /* Main article content takes more space */
+    min-width: 60%;
+    /* MODIFIED: Reduced max-width for "cool" look */
+    max-width: 800px; /* Adjust as desired, keeps card from being too wide */
+    background-color: var(--body-bg-white);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    color: var(--dark-text);
+    order: 1; /* Main article content first in source order */
+    margin: 0 auto; /* Center the card if it's not taking full flex space */
+}
+
+/* --- HIDE POPULAR CATEGORIES ON ARTICLE.HTML --- */
+.single-article-layout .popular-categories-sidebar {
+    display: none; /* Hides the popular categories card on article.html */
+}
+
+/* Ad Placeholder in article.html, positioned after popular categories */
+.single-article-layout .ad-placeholder {
+    order: 3; /* Placed after popular categories */
+    /* Hides ads but keeps their layout space on desktop */
+    opacity: 0;
+    pointer-events: none;
+}
+/* --- END SINGLE ARTICLE LAYOUT --- */
+
+.single-article-content h1 {
+    color: var(--blue-hover);
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-align: left;
+    text-shadow: none;
+}
+
+.article-meta {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.article-meta span {
+    margin-right: 25px;
+    display: inline-block;
+}
+
+.article-meta strong {
+    color: var(--dark-text);
+}
+
+.article-media {
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* MODIFIED: Centering for media within the article */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.article-media img,
+/* MODIFIED: YouTube video size adjustment */
+.article-media video,
+.article-media iframe {
+    width: 100%; /* Keep 100% of its container */
+    max-width: 700px; /* Set a maximum width for videos and images */
+    height: auto;
+    display: block;
+}
+
+.article-body {
+    font-size: 1.15em;
+    line-height: 1.9;
+    color: var(--dark-text);
+    margin-bottom: 40px;
+}
+
+.article-body p {
+    margin-bottom: 1.5em;
+}
+
+.article-tags {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 1em;
+    color: var(--dark-text);
+}
+
+.article-tags span {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: var(--orange-highlight);
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- RECOMMENDED ARTICLES SECTION - REMOVED --- */
+/* Based on your instruction: "if it's hard to you to put recommended articles after or below main article on left side remove it not be shown their card" */
+.recommended-articles-section {
+    display: none; /* This will hide the entire section, including its cards */
+}
+/* --- END RECOMMENDED ARTICLES - REMOVED --- */
+
+
+/* Admin Panel (admin.html) */
+/* Admin panel sections remain dark as they are distinct UI elements */
+.admin-page h1 {
+    text-align: center;
+    color: var(--orange-highlight);
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 3.5em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.admin-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+@media (min-width: 992px) {
+    .admin-sections {
+        flex-direction: row;
+    }
+}
+
+.admin-form-section, .admin-list-section {
+    background-color: var(--black-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    flex: 1;
+    color: var(--light-gray);
+}
+
+.admin-form-section h2, .admin-list-section h2 {
+    color: var(--blue-hover);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 2em;
+    border-bottom: 1px solid var(--dark-gray);
+    padding-bottom: 10px;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--light-gray);
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group textarea {
+    width: calc(100% - 22px);
+    padding: 12px;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: var(--white-text);
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--blue-hover);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    outline: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group input[type="file"] {
+    background-color: #2a2a2a;
+    color: var(--white-text);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px dashed var(--blue-hover);
+    width: calc(100% - 22px);
+    box-sizing: border-box;
+}
+
+.form-group .file-info {
+    font-size: 0.9em;
+    color: #999;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.form-group .file-info input[type="checkbox"] {
+    margin-left: 10px;
+    transform: scale(1.2);
+}
+
+.form-actions {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.form-actions button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for admin buttons */
+}
+
+.form-actions button.submit-button {
+    background-color: var(--blue-hover);
+    color: white;
+}
+
+.form-actions button.submit-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.form-actions button.cancel-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.form-actions button.cancel-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Tables */
+.admin-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.admin-list-table th, .admin-list-table td {
+    border: 1px solid var(--dark-gray);
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.admin-list-table th {
+    background-color: #2a2a2a;
+    color: var(--orange-highlight);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+.admin-list-table tr:nth-child(even) {
+    background-color: #1f1f1f;
+}
+
+.admin-list-table tr:hover {
+    background-color: #2a2a2a;
+}
+
+.admin-list-table td button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-right: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for table buttons */
+}
+
+.admin-list-table td .edit-button {
+    background-color: var(--orange-highlight);
+    color: var(--black-bg);
+}
+
+.admin-list-table td .edit-button:hover {
+    background-color: #cc8400;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.admin-list-table td .delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.admin-list-table td .delete-button:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar {
+        width: 100%;
+        margin-top: 15px;
+        padding: 0;
+    }
+
+    .nav-links {
+        justify-content: flex-start;
+        flex-direction: column;
+        display: none;
+        width: 100%;
+        background-color: var(--dark-gray);
+        border-top: 1px solid var(--body-bg-white);
+        padding-bottom: 10px;
+        gap: 0;
+    }
+
+    .nav-links.active { /* Changed from .show to .active to match JS */
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 0;
+        width: 100%;
+        text-align: left;
+    }
+
+    .nav-link {
+        padding: 12px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border-top: none;
+        background-color: var(--dark-gray);
+        padding-left: 20px;
+        width: 100%;
+    }
+
+    .dropdown-menu li a {
+        padding-left: 30px;
+    }
+
+    .dropdown-menu.active { /* Changed from .show to .active to match JS */
+        display: block;
+    }
+
+    .menu-toggle {
+        display: block;
+        order: 1;
+        align-self: flex-end;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+
+    .header-right {
+        order: 2;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--body-bg-white);
+    }
+
+    .language-flags {
+        margin-left: 0;
+    }
+
+    .language-flags .flag {
+        margin: 0 5px;
+    }
+
+    .search-icon {
+        align-self: flex-start;
+    }
+
+    /* Ad placeholder hidden on smaller screens, no space reserved */
+    .ad-placeholder {
+        display: none;
+    }
+
+    /* Responsive for general main-content if not using specific layouts */
+    .main-content:not(.articles-layout):not(.single-article-layout) {
+        flex-direction: column;
+        padding-top: 20px;
+    }
+
+    .story-sways-info {
+        order: 1;
+    }
+
+    /* --- RESPONSIVE ADJUSTMENTS FOR ARTICLES.HTML LAYOUT --- */
+    .articles-layout {
+        flex-direction: column; /* Stack main content and sidebar vertically */
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .articles-page .main-articles-content,
+    .popular-categories-sidebar,
+    .articles-page .search-section { /* Also adjust search section */
+        min-width: unset; /* Remove min-width constraints */
+        width: 100%; /* Take full width */
+        order: unset; /* Reset order for stacking */
+        max-width: unset; /* Remove max-width on mobile */
+        max-height: unset; /* Allow content to fully show on mobile, no fixed height */
+        height: auto; /* Allow content to fully show on mobile, no fixed height */
+        overflow: visible; /* Show all content on mobile */
+    }
+
+    /* --- RESPONSIVE ADJUSTMENTS FOR ARTICLE.HTML LAYOUT --- */
+    .single-article-layout {
+        flex-direction: column; /* Stack main article and sidebar vertically */
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .main-article-content {
+        min-width: unset; /* Remove min-width constraints */
+        max-width: unset; /* Allow to take full width on mobile */
+        width: 100%; /* Take full width */
+        order: unset; /* Reset order for stacking */
+        padding: 20px; /* Adjust padding for mobile */
+    }
+
+    .single-article-content h1 {
+        font-size: 2em; /* Smaller title on mobile */
+        text-align: center;
+    }
+
+    .article-media {
+        margin-left: -20px; /* Adjust to cover full width */
+        margin-right: -20px;
+        border-radius: 0; /* Remove border-radius for full width */
+    }
+
+    .article-media iframe {
+        max-width: 100%; /* Ensure video fits within screen */
+    }
+
+    .article-body {
+        font-size: 1em; /* Smaller body text on mobile */
+    }
+
+    .email-subscribe-section {
+        padding: 30px 15px;
+    }
+
+    .email-subscribe-section h2 {
+        font-size: 2em;
+    }
+
+    .ml-form-embedContainer form {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ml-form-embedContainer input.form-control[type="email"],
+    .ml-form-embedContainer button.primary {
+        width: 100%;
+        min-width: unset;
+        max-width: 300px; /* Constrain width for better mobile input */
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-links,
+    .social-media,
+    .newsletter {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .newsletter-form {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content .logo img {
+        height: 80px; /* Smaller logo on smaller screens */
+    }
+
+    .nav-links {
+        padding-top: 0;
+    }
+
+    .menu-toggle {
+        font-size: 1.5em; /* Slightly smaller toggle */
+        margin-right: 10px;
+    }
+
+    .header-right {
+        margin-top: 10px;
+        padding-bottom: 5px;
+    }
+
+    .search-icon {
+        padding: 8px 10px; /* Smaller search icon */
+        font-size: 1.2em;
+    }
+
+    .header-search-input.active {
+        width: 200px; /* Adjust search input width */
+    }
+
+    .articles-grid { /* Recommended articles grid is hidden globally now */
+        grid-template-columns: 1fr; /* Single column on very small screens */
+        gap: 20px;
+    }
+
+    .article-card {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .article-card img, .article-card video {
+        max-height: 180px;
+    }
+
+    .article-card h3 {
+        font-size: 1.4em;
+    }
+
+    .read-more-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    
+    /* Ensure no extra padding on small screens if article-media is full width */
+    .main-article-content {
+        padding: 20px;
+    }
+}

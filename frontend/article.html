@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Story Sways - Article</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="article-page">  <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <img src="pictures/SS Logo.png" alt="Story Sways Logo">
+            </div>
+            <nav class="navbar">
+                <button class="menu-toggle" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link" id="navHome">Home</a></li>
+                    <li class="dropdown">
+                        <a href="articles.html" class="nav-link dropdown-toggle" id="navNews">News</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navPRServices">PR Services</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Retail</a></li>
+                            <li><a href="#">Content Creation</a></li>
+                            <li><a href="#">Branding Strategy</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" class="nav-link" id="navStartups">Startups</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navIgniteTalk">Ignite Talk</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Retail Talk</a></li>
+                            <li><a href="#">Sponsoring Talk</a></li>
+                            <li><a href="#">Media Strategy Talk</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="header-right">
+                <div class="language-flags">
+                    <img src="https://flagcdn.com/gb.svg" alt="English Flag" title="English" class="flag" data-lang="en">
+                    <img src="https://flagcdn.com/rw.svg" alt="Kinyarwanda Flag" title="Kinyarwanda" class="flag" data-lang="rw">
+                    <img src="https://flagcdn.com/fr.svg" alt="French Flag" title="French" class="flag" data-lang="fr">
+                </div>
+                <div class="search-container-header">
+                    <i class="fas fa-search search-icon" id="headerSearchIcon"></i>
+                    <input type="text" id="headerSearchInput" class="header-search-input" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container single-article-layout"> <section id="articleContent" class="main-article-content"> <p style="text-align: center; color: #999;">Loading article...</p>
+        </section>
+
+        <aside class="popular-categories-sidebar"> <div class="sidebar-ad hidden-ad ad-placeholder"> <h3>Advertisement</h3>
+                <p>Your Ad Space 1</p>
+                <img src="https://via.placeholder.com/300x250?text=Your+Ad+Here" alt="Advertisement 1">
+            </div>
+            <div class="sidebar-ad hidden-ad ad-placeholder"> <h3>Advertisement</h3>
+                <p>Your Ad Space 2</p>
+                <img src="https://via.placeholder.com/300x600?text=Another+Ad+Here" alt="Advertisement 2">
+            </div>
+            <div class="sidebar-section">
+                <h3 id="popularCategoriesTitle">Popular Categories</h3>
+                <ul>
+                    <li><a href="articles.html?category=Public+Relations" id="catPR">Public Relations Strategy</a></li>
+                    <li><a href="articles.html?category=Content+Marketing" id="catContent">Content Marketing</a></li>
+                    <li><a href="articles.html?category=Branding+Identity" id="catBranding">Branding & Identity</a></li>
+                    <li><a href="articles.html?category=Digital+Marketing" id="catDigital">Digital Marketing</a></li>
+                    <li><a href="articles.html?category=Industry+News" id="catIndustry">Industry News</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="recommended-articles-section">
+            <h2 id="recommendedArticlesTitle">Recommended Articles</h2>
+            <div id="recommended-articles-container" class="article-grid">
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-links">
+                <a href="#" id="footerCareers">Careers</a>
+                <a href="#" id="footerContact">Contact Us</a>
+            </div>
+            <div class="social-media">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="newsletter">
+                <p id="newsletterText">Subscribe to our newsletter for the latest updates!</p>
+                <form class="newsletter-form">
+                    <input type="email" id="newsletterEmailInput" placeholder="Enter your email address" aria-label="Email for newsletter">
+                    <button type="submit" class="orange-button" id="subscribeButton">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="copyrightText">© 2025 Story Sways. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const articleContentDiv = document.getElementById('articleContent');
+            const recommendedArticlesContainer = document.getElementById('recommended-articles-container');
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+
+            // --- Header & Footer Language Logic (Copied from articles.html) ---
+            const headerSearchIcon = document.getElementById('headerSearchIcon');
+            const headerSearchInput = document.getElementById('headerSearchInput');
+            const langFlags = document.querySelectorAll('.language-flags .flag');
+            let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+            const translatableElements = {
+                pageTitle: { en: 'Story Sways - Article', fr: 'Story Sways - Article', rw: 'Story Sways - Inyandiko' },
+                navHome: { en: 'Home', fr: 'Accueil', rw: 'Ahabanza' },
+                navNews: { en: 'News', fr: 'Actualités', rw: 'Amakuru' },
+                navPRServices: { en: 'PR Services', fr: 'Services RP', rw: 'Serivisi za PR' },
+                navStartups: { en: 'Startups', fr: 'Startups', rw: 'Startups' },
+                navIgniteTalk: { en: 'Ignite Talk', fr: 'Ignite Talk', rw: 'Ignite Talk' },
+                popularCategoriesTitle: { en: 'Popular Categories', fr: 'Catégories Populaires', rw: 'Ibyiciro Bikunzwe' },
+                catPR: { en: 'Public Relations Strategy', fr: 'Stratégie de Relations Publiques', rw: 'Amayeri ya PR' },
+                catContent: { en: 'Content Marketing', fr: 'Marketing de Contenu', rw: 'Kwamamaza ibinyuranye' },
+                catBranding: { en: 'Branding & Identity', fr: 'Image de Marque & Identité', rw: 'Ikimenyetso & Indangagaciro' },
+                catDigital: { en: 'Digital Marketing', fr: 'Marketing Numérique', rw: 'Iyamamaza muri internet' },
+                catIndustry: { en: 'Industry News', fr: 'Nouvelles de l\'Industrie', rw: 'Amakuru y\'Inganda' },
+                footerCareers: { en: 'Careers', fr: 'Carrières', rw: 'Imirimo' },
+                footerContact: { en: 'Contact Us', fr: 'Contactez-nous', rw: 'Twandikire' },
+                newsletterText: { en: 'Subscribe to our newsletter for the latest updates!', fr: 'Abonnez-vous à notre newsletter pour les dernières mises à jour !', rw: 'Iyandikishe kuri newsletter yacu kugira ngo ubashe kubona amakuru agezweho!' },
+                subscribeButton: { en: 'Subscribe', fr: 'S\'abonner', rw: 'Iyandikishe' },
+                copyrightText: { en: '© 2025 Story Sways. All Rights Reserved.', fr: '© 2025 Story Sways. Tous droits réservés.', rw: '© 2025 Story Sways. Uburenganzira bwose burabitswe.' },
+                loadingArticle: {en: 'Loading article...', fr: 'Chargement de l\'article...', rw: 'Inyandiko irimo kuboneka...'},
+                errorIdNotProvided: {en: 'Error: Article ID not provided.', fr: 'Erreur : ID d\'article non fourni.', rw: 'Ikosa: Nimero y\'inyandiko ntabwo yabonetse.'},
+                articleNotFound: {en: 'Article not found.', fr: 'Article introuvable.', rw: 'Inyandiko ntabwo yabonetse.'},
+                errorLoadingArticle: {en: 'Error loading article. Please try again later.', fr: 'Erreur lors du chargement de l\'article. Veuillez réessayer plus tard.', rw: 'Ikosa mu kubona inyandiko. Gerageza nyuma.'},
+                authorLabel: {en: 'Author:', fr: 'Auteur :', rw: 'Uwanditse:'},
+                categoryLabel: {en: 'Category:', fr: 'Catégorie :', rw: 'Icyiciro:'},
+                publishedLabel: {en: 'Published:', fr: 'Publié le :', rw: 'Yatangajwe:'},
+                tagsLabel: {en: 'Tags:', fr: 'Mots-clés :', rw: 'Amagambo yihariye:'},
+                readMoreButton: { en: 'Read More', fr: 'Lire la suite', rw: 'Soma Byinshi' },
+                recommendedArticlesTitle: {en: 'Recommended Articles', fr: 'Articles Recommandés', rw: 'Inyandiko Zisabwa'},
+                noRecommendedArticles: {en: 'No recommended articles found.', fr: 'Aucun article recommandé trouvé.', rw: 'Ntabwo habonetse inyandiko zisabwa.'}
+            };
+
+            const applyStaticTranslations = (lang) => {
+                Object.keys(translatableElements).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && translatableElements[id][lang]) {
+                        // Special handling for placeholder text
+                        if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                            element.placeholder = translatableElements[id][lang];
+                        } else {
+                            element.textContent = translatableElements[id][lang];
+                        }
+                    }
+                });
+                headerSearchInput.placeholder = lang === 'fr' ? 'Rechercher...' :
+                                                lang === 'rw' ? 'Shakisha...' :
+                                                'Search...';
+            };
+
+            const setLanguage = async (lang) => {
+                currentLanguage = lang;
+                localStorage.setItem('selectedLanguage', lang);
+                applyStaticTranslations(lang);
+                // Re-fetch and display article to apply content-level translations
+                if (articleId) {
+                    await fetchAndDisplayArticle(articleId, currentLanguage);
+                }
+            };
+
+            setLanguage(currentLanguage);
+
+            langFlags.forEach(flag => {
+                flag.addEventListener('click', () => {
+                    setLanguage(flag.dataset.lang);
+                });
+            });
+
+            if (headerSearchIcon && headerSearchInput) {
+                headerSearchIcon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    headerSearchInput.classList.toggle('active');
+                    if (headerSearchInput.classList.contains('active')) {
+                        headerSearchInput.focus();
+                    } else {
+                        headerSearchInput.value = '';
+                    }
+                });
+
+                headerSearchInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        const searchTerm = headerSearchInput.value.trim();
+                        if (searchTerm) {
+                            window.location.href = `articles.html?q=${encodeURIComponent(searchTerm)}`;
+                        } else {
+                            window.location.href = `articles.html`;
+                        }
+                    }
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!headerSearchIcon.contains(event.target) && !headerSearchInput.contains(event.target)) {
+                        headerSearchInput.classList.remove('active');
+                        headerSearchInput.value = '';
+                    }
+                });
+            }
+            // --- End Header & Footer Language Logic ---
+
+            // Helper to extract YouTube video ID (IMPROVED)
+            function extractYouTubeId(url) {
+                if (!url) return null;
+                let videoId = null;
+
+                // Standard YouTube URL regex (handles various http://youtube.com/watch?v= and http://youtu.be/ formats)
+                const standardYouTubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+                let match = url.match(standardYouTubeRegex);
+                if (match && match[1]) {
+                    videoId = match[1];
+                } else {
+                    // Specific googleusercontent.com proxy URL format check (adjusted for correctness)
+                    const googleUserContentRegex = /googleusercontent\.com\/youtube\.com\/(\w{11})/i; 
+                    match = url.match(googleUserContentRegex);
+                    if (match && match[1]) {
+                        videoId = match[1];
+                    }
+                }
+                return videoId;
+            }
+
+            // Function to get translated text, with fallback to English then default
+            const getTranslatedText = (obj, lang, defaultText = 'N/A') => {
+                // If obj is a simple string, return it if not empty, otherwise default
+                if (typeof obj === 'string' && obj.trim() !== '') {
+                    return obj;
+                }
+                // If obj is an object (like for translations), try specified lang, then English, then default
+                if (obj && typeof obj === 'object') {
+                    if (obj[lang]) return obj[lang];
+                    if (obj.en) return obj.en;
+                }
+                return defaultText;
+            };
+
+            // Function to fetch and display the single article
+            async function fetchAndDisplayArticle(id, lang) {
+                articleContentDiv.innerHTML = `<p style="text-align: center; color: #999;">${translatableElements.loadingArticle[lang]}</p>`;
+
+                try {
+                    const response = await fetch(`/api/articles/${id}`);
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            articleContentDiv.innerHTML = `<p style="text-align: center; color: #ffc107;">${translatableElements.articleNotFound[lang]}</p>`;
+                        } else {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return;
+                    }
+                    const article = await response.json();
+
+                    // Get translated content for dynamic parts
+                    const displayTitle = getTranslatedText(article.title, lang, 'Article Title Not Found');
+                    // Replace newlines with <br> for proper HTML display of content
+                    const displayContent = getTranslatedText(article.content, lang, 'Article content not found.').replace(/\n/g, '<br>');
+                    const displayAuthor = getTranslatedText(article.author, lang);
+                    const displayCategory = getTranslatedText(article.category, lang);
+                    const displaySubcategory = getTranslatedText(article.subcategory, lang);
+                    
+                    const tagsHtml = article.tags && article.tags.length > 0
+                        ? article.tags.map(tag => `<span>${getTranslatedText(tag, lang, tag)}</span>`).join('')
+                        : 'N/A';
+
+                    let mediaHtml = '';
+                    if (article.image_file) {
+                        mediaHtml = `<div class="article-media"><img src="/${article.image_file}" alt="${displayTitle}"></div>`;
+                    } else if (article.image_url) {
+                        mediaHtml = `<div class="article-media"><img src="${article.image_url}" alt="${displayTitle}"></div>`;
+                    } else if (article.video_file) {
+                        mediaHtml = `<div class="article-media"><video controls><source src="/${article.video_file}" type="video/mp4"></video></div>`;
+                    } else if (article.video_url) {
+                        const youtubeId = extractYouTubeId(article.video_url);
+                        if (youtubeId) {
+                            // Correct YouTube embed URL
+                            mediaHtml = `<div class="article-media video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                        } else {
+                            mediaHtml = `<div class="article-media"><a href="${article.video_url}" target="_blank" rel="noopener noreferrer">${getTranslatedText({en: 'Watch Video', fr: 'Regarder la vidéo', rw: 'Reba Video'}, lang)}</a></div>`;
+                        }
+                    }
+
+                    document.title = displayTitle; // Update page title dynamically
+
+                    articleContentDiv.innerHTML = `
+                        <h1>${displayTitle}</h1>
+                        <div class="article-meta">
+                            <span><strong>${translatableElements.authorLabel[lang]}</strong> ${displayAuthor}</span>
+                            <span><strong>${translatableElements.categoryLabel[lang]}</strong> ${displayCategory}${displaySubcategory && displaySubcategory !== 'N/A' ? ` / ${displaySubcategory}` : ''}</span>
+                            <span><strong>${translatableElements.publishedLabel[lang]}</strong> ${article.published_at ? new Date(article.published_at).toLocaleString(lang) : 'N/A'}</span>
+                        </div>
+                        ${mediaHtml}
+                        <div class="article-body">
+                            ${displayContent}
+                        </div>
+                        <div class="article-tags">
+                            <strong>${translatableElements.tagsLabel[lang]}</strong> ${tagsHtml}
+                        </div>
+                    `;
+
+                    // After displaying the main article, fetch recommended ones
+                    await fetchRecommendedArticles(article.category, article.tags, article.id, lang);
+
+
+                } catch (error) {
+                    console.error('Error fetching article:', error);
+                    articleContentDiv.innerHTML = `<p style="text-align: center; color: #dc3545;">${translatableElements.errorLoadingArticle[lang]}</p>`;
+                }
+            }
+
+            // Function to fetch and display recommended articles
+            async function fetchRecommendedArticles(category, tags, currentArticleId, lang) {
+                recommendedArticlesContainer.innerHTML = ''; // Clear previous recommendations
+                const params = new URLSearchParams();
+
+                // Prioritize category for recommendations, then tags
+                if (category && category !== 'N/A') { // Ensure category is valid
+                    params.append('category', category);
+                } else if (tags && tags.length > 0) {
+                    // If no category, try to recommend by tags
+                    // Ensure tags are correctly URL-encoded and comma-separated
+                    params.append('tags', tags.map(tag => encodeURIComponent(tag)).join(','));
+                }
+                
+                params.append('limit', 3); // Limit to 3 recommended articles
+                params.append('exclude_id', currentArticleId); // Exclude the current article
+
+                // If no meaningful parameters for recommendation, show a message
+                if (!params.toString() && !category && (!tags || tags.length === 0)) {
+                    recommendedArticlesContainer.innerHTML = `<p>${translatableElements.noRecommendedArticles[lang]}</p>`;
+                    return;
+                }
+
+                let url = `/api/articles/search?${params.toString()}`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch recommended articles: ${response.status}`);
+                    }
+                    let articles = await response.json();
+
+                    if (articles.length === 0) {
+                        recommendedArticlesContainer.innerHTML = `<p>${translatableElements.noRecommendedArticles[lang]}</p>`;
+                        return;
+                    }
+
+                    articles.forEach(article => {
+                        const articleCard = document.createElement('div');
+                        articleCard.classList.add('article-card'); // Reuse article-card styles
+
+                        let displayTitle = getTranslatedText(article.title, lang, 'No Title');
+                        // Truncate content for card display
+                        let displayDescription = getTranslatedText(article.content, lang, 'No Description');
+                        if (displayDescription.length > 150) {
+                            displayDescription = displayDescription.substring(0, 150) + '...';
+                        }
+                        let displayCategory = getTranslatedText(article.category, lang, '');
+
+                        let mediaContent = '';
+                        if (article.image_url) {
+                            mediaContent = `<img src="${article.image_url}" alt="${displayTitle}">`;
+                        } else if (article.image_file) {
+                            mediaContent = `<img src="/${article.image_file}" alt="${displayTitle}">`;
+                        } else if (article.video_url) {
+                            const youtubeId = extractYouTubeId(article.video_url);
+                            if (youtubeId) {
+                                mediaContent = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                            }
+                        } else if (article.video_file) {
+                            mediaContent = `<div class="video-container"><video controls src="/${article.video_file}" alt="${displayTitle} video"></video></div>`;
+                        } else {
+                            mediaContent = `<img src="https://via.placeholder.com/300x200?text=No+Image" alt="Placeholder Image" class="placeholder">`;
+                        }
+                        
+                        articleCard.innerHTML = `
+                            ${mediaContent}
+                            ${displayCategory ? `<span class="article-category">${displayCategory}</span>` : ''}
+                            <h3>${displayTitle}</h3>
+                            <p>${displayDescription}</p>
+                            <a href="article.html?id=${article.id}" class="read-more-button">${translatableElements.readMoreButton[currentLanguage]}</a>
+                        `;
+                        recommendedArticlesContainer.appendChild(articleCard);
+                    });
+
+                } catch (error) {
+                    console.error('Error fetching recommended articles:', error);
+                    recommendedArticlesContainer.innerHTML = `<p>${translatableElements.noRecommendedArticles[lang]}</p>`;
+                }
+            }
+
+
+            // Initial fetch based on URL ID and current language
+            if (!articleId) {
+                articleContentDiv.innerHTML = `<p style="text-align: center; color: #dc3545;">${translatableElements.errorIdNotProvided[currentLanguage]}</p>`;
+                return;
+            } else {
+                await fetchAndDisplayArticle(articleId, currentLanguage);
+            }
+
+            // Mobile menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Dropdown menu toggle
+            document.querySelectorAll('.dropdown-toggle').forEach(item => {
+                item.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 768) { // Only for mobile
+                        event.preventDefault(); // Prevent navigation on click
+                        const dropdownMenu = this.nextElementSibling;
+                        if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
+                            dropdownMenu.classList.toggle('active');
+                        }
+                    }
+                });
+            });
+
+            // Close mobile menu when a link is clicked or outside is clicked
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        navLinks.classList.remove('active');
+                        document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('active'));
+                    }
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                if (window.innerWidth <= 768 && !navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                    navLinks.classList.remove('active');
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('active'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "your-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cp config.production.js config.js"
+  }
+}

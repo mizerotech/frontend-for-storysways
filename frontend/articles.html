@@ -60,7 +60,7 @@
             <h1 id="articlesPageTitle">Latest Articles</h1>
             <div id="articles-list" class="articles-grid">
                 <p style="text-align: center; color: #999;">Loading articles...</p>
-            </div>
+                </div>
         </section>
 
         <aside class="popular-categories-sidebar">
@@ -113,11 +113,11 @@
     </footer>
 
     <script>
-        // Define your API Base URL **AT THE TOP** of this script block in articles.html
-        // This is the correct URL for your Render backend where articles are fetched from.
-        const API_BASE_URL = "https://my-go-articles-api.onrender.com"; // <--- **CRUCIAL FIX HERE**
-
         document.addEventListener('DOMContentLoaded', async () => {
+            // Define your API base URL
+            // THIS IS THE CRITICAL LINE ADDED/UPDATED
+            const API_BASE_URL = "https://my-go-articles-api.onrender.com";
+
             const articlesListDiv = document.getElementById('articles-list');
             const urlParams = new URLSearchParams(window.location.search);
             const searchTerm = urlParams.get('q');
@@ -245,7 +245,9 @@
             async function fetchAndDisplayArticles(lang, searchTerm = '', categoryFilter = '') {
                 articlesListDiv.innerHTML = `<p style="text-align: center; color: #999;">${translatableElements.loadingArticles[lang]}</p>`;
 
-                let url = `${API_BASE_URL}/api/articles`; // <--- **UPDATED API CALL URL**
+                // Use the API_BASE_URL here!
+                let url = `${API_BASE_URL}/api/articles`; // <--- THIS LINE IS NOW CORRECTED
+
                 const params = new URLSearchParams();
                 if (searchTerm) {
                     params.append('q', searchTerm);
@@ -262,7 +264,7 @@
                 }
 
                 try {
-                    const response = await fetch(url); // <--- **USING THE CORRECTED URL**
+                    const response = await fetch(url);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -287,20 +289,18 @@
                         let displayCategory = getTranslatedText(article.category, lang, '');
 
                         let mediaContent = '';
-                        // --- IMPORTANT: Ensure these paths correctly point to your backend if it serves files ---
-                        // For images/videos stored on your backend, prepend API_BASE_URL
-                        // Example: If your backend serves uploaded files from `/uploads/`, then use `${API_BASE_URL}/uploads/${article.image_file}`
                         if (article.image_url) {
                             mediaContent = `<img src="${article.image_url}" alt="${displayTitle}">`;
                         } else if (article.image_file) {
-                            mediaContent = `<img src="${API_BASE_URL}/${article.image_file}" alt="${displayTitle}">`; // <--- **POSSIBLE FIX FOR LOCAL FILES**
+                            mediaContent = `<img src="/${article.image_file}" alt="${displayTitle}">`;
                         } else if (article.video_url) {
                             const youtubeId = extractYouTubeId(article.video_url);
                             if (youtubeId) {
-                                mediaContent = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`; // <--- **YOUTUBE EMBED URL FIX**
+                                // Corrected YouTube iframe URL here
+                                mediaContent = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                             }
                         } else if (article.video_file) {
-                            mediaContent = `<div class="video-container"><video controls src="${API_BASE_URL}/${article.video_file}" alt="${displayTitle} video"></video></div>`; // <--- **POSSIBLE FIX FOR LOCAL FILES**
+                            mediaContent = `<div class="video-container"><video controls src="/${article.video_file}" alt="${displayTitle} video"></video></div>`;
                         } else {
                             mediaContent = `<img src="https://via.placeholder.com/300x200?text=No+Image" alt="Placeholder Image" class="placeholder">`;
                         }

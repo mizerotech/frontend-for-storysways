@@ -233,7 +233,7 @@
                 if (!url) return null;
                 let videoId = null;
 
-                // Standard YouTube URL regex (handles various http://youtube.com/watch?v= formats)
+                // Standard YouTube URL regex (handles various formats)
                 const standardYouTubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
                 let match = url.match(standardYouTubeRegex);
                 if (match && match[1]) {
@@ -268,7 +268,7 @@
                 articleContentDiv.innerHTML = `<p style="text-align: center; color: #999;">${translatableElements.loadingArticle[lang]}</p>`;
 
                 try {
-                    // **MODIFIED LINE:** Use API_BASE_URL for fetching the single article
+                    // **FIXED LINE:** Use API_BASE_URL for fetching the single article
                     const response = await fetch(`${API_BASE_URL}/api/articles/${id}`);
                     if (!response.ok) {
                         if (response.status === 404) {
@@ -294,15 +294,17 @@
 
                     let mediaHtml = '';
                     if (article.image_file) {
-                        mediaHtml = `<div class="article-media"><img src="/${article.image_file}" alt="${displayTitle}"></div>`;
+                        // **FIXED LINE:** Prepend API_BASE_URL for locally stored image files
+                        mediaHtml = `<div class="article-media"><img src="${API_BASE_URL}/${article.image_file}" alt="${displayTitle}"></div>`;
                     } else if (article.image_url) {
                         mediaHtml = `<div class="article-media"><img src="${article.image_url}" alt="${displayTitle}"></div>`;
                     } else if (article.video_file) {
-                        mediaHtml = `<div class="article-media"><video controls><source src="/${article.video_file}" type="video/mp4"></video></div>`;
+                        // **FIXED LINE:** Prepend API_BASE_URL for locally stored video files
+                        mediaHtml = `<div class="article-media"><video controls><source src="${API_BASE_URL}/${article.video_file}" type="video/mp4"></video></div>`;
                     } else if (article.video_url) {
                         const youtubeId = extractYouTubeId(article.video_url);
                         if (youtubeId) {
-                            // **MODIFIED LINE:** Correct YouTube embed URL, removing the '4'
+                            // **FIXED LINE:** Correct standard YouTube embed URL
                             mediaHtml = `<div class="article-media video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                         } else {
                             mediaHtml = `<div class="article-media"><a href="${article.video_url}" target="_blank" rel="noopener noreferrer">${getTranslatedText({en: 'Watch Video', fr: 'Regarder la vidéo', rw: 'Reba Video'}, lang)}</a></div>`;
@@ -330,7 +332,6 @@
                     // After displaying the main article, fetch recommended ones
                     await fetchRecommendedArticles(article.category, article.tags, article.id, lang);
 
-
                 } catch (error) {
                     console.error('Error fetching article:', error);
                     articleContentDiv.innerHTML = `<p style="text-align: center; color: #dc3545;">${translatableElements.errorLoadingArticle[lang]}</p>`;
@@ -343,24 +344,25 @@
                 const params = new URLSearchParams();
 
                 // Prioritize category for recommendations, then tags
-                if (category && category !== 'N/A') { // Ensure category is valid
-                    params.append('category', category);
+                if (category && category !== 'N/A') {
+                    // **FIXED LINE:** Ensure category is trimmed to remove any leading/trailing whitespace
+                    params.append('category', category.trim());
                 } else if (tags && tags.length > 0) {
-                    // If no category, try to recommend by tags
-                    // Ensure tags are correctly URL-encoded and comma-separated
-                    params.append('tags', tags.map(tag => encodeURIComponent(tag)).join(','));
+                    // **FIXED LINE:** Ensure each tag is trimmed before encoding and joining
+                    params.append('tags', tags.map(tag => encodeURIComponent(tag.trim())).join(','));
                 }
                 
                 params.append('limit', 3); // Limit to 3 recommended articles
                 params.append('exclude_id', currentArticleId); // Exclude the current article
 
                 // If no meaningful parameters for recommendation, show a message
-                if (!params.toString() && !category && (!tags || tags.length === 0)) {
+                // **FIXED LINE:** Simplified check if no params were appended
+                if (!params.toString()) {
                     recommendedArticlesContainer.innerHTML = `<p>${translatableElements.noRecommendedArticles[lang]}</p>`;
                     return;
                 }
 
-                // **MODIFIED LINE:** Use API_BASE_URL for fetching recommended articles
+                // **FIXED LINE:** Use API_BASE_URL for fetching recommended articles
                 let url = `${API_BASE_URL}/api/articles/search?${params.toString()}`;
 
                 try {
@@ -391,15 +393,17 @@
                         if (article.image_url) {
                             mediaContent = `<img src="${article.image_url}" alt="${displayTitle}">`;
                         } else if (article.image_file) {
-                            mediaContent = `<img src="/${article.image_file}" alt="${displayTitle}">`;
+                            // **FIXED LINE:** Prepend API_BASE_URL for locally stored image files in recommended articles
+                            mediaContent = `<img src="${API_BASE_URL}/${article.image_file}" alt="${displayTitle}">`;
                         } else if (article.video_url) {
                             const youtubeId = extractYouTubeId(article.video_url);
                             if (youtubeId) {
-                                // **MODIFIED LINE:** Correct YouTube embed URL, removing the '4'
+                                // **FIXED LINE:** Correct standard YouTube embed URL in recommended articles
                                 mediaContent = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                             }
                         } else if (article.video_file) {
-                            mediaContent = `<div class="video-container"><video controls src="/${article.video_file}" alt="${displayTitle} video"></video></div>`;
+                            // **FIXED LINE:** Prepend API_BASE_URL for locally stored video files in recommended articles
+                            mediaContent = `<div class="video-container"><video controls src="${API_BASE_URL}/${article.video_file}" alt="${displayTitle} video"></video></div>`;
                         } else {
                             mediaContent = `<img src="https://via.placeholder.com/300x200?text=No+Image" alt="Placeholder Image" class="placeholder">`;
                         }

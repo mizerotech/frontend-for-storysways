@@ -60,7 +60,7 @@
             <h1 id="articlesPageTitle">Latest Articles</h1>
             <div id="articles-list" class="articles-grid">
                 <p style="text-align: center; color: #999;">Loading articles...</p>
-                </div>
+            </div>
         </section>
 
         <aside class="popular-categories-sidebar">
@@ -115,7 +115,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // Define your API base URL
-            // THIS IS THE CRITICAL LINE ADDED/UPDATED
             const API_BASE_URL = "https://my-go-articles-api.onrender.com";
 
             const articlesListDiv = document.getElementById('articles-list');
@@ -246,7 +245,7 @@
                 articlesListDiv.innerHTML = `<p style="text-align: center; color: #999;">${translatableElements.loadingArticles[lang]}</p>`;
 
                 // Use the API_BASE_URL here!
-                let url = `${API_BASE_URL}/api/articles`; // <--- THIS LINE IS NOW CORRECTED
+                let url = `${API_BASE_URL}/api/articles`; // THIS LINE IS NOW CORRECTED (already was)
 
                 const params = new URLSearchParams();
                 if (searchTerm) {
@@ -296,7 +295,7 @@
                         } else if (article.video_url) {
                             const youtubeId = extractYouTubeId(article.video_url);
                             if (youtubeId) {
-                                // Corrected YouTube iframe URL here
+                                // CORRECTED YOUTUBE IFRAME URL HERE
                                 mediaContent = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                             }
                         } else if (article.video_file) {

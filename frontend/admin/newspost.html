@@ -634,96 +634,118 @@
 
     <div id="footer-placeholder"></div>
 
-    <script>
-        // frontend/script.js
+   <script>
+    // frontend/script.js OR an inline script in newspost.html
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Common Functions for all pages ---
+    // >>>>>>>>>>>>>>>>>>>>>> ADD THIS LINE HERE <<<<<<<<<<<<<<<<<<<<<<<<
+    // Define your API Base URL
+    const API_BASE_URL = "https://my-go-articles-api.onrender.com"; // Your Render backend URL
+    // >>>>>>>>>>>>>>>>>>>>>> ADD THIS LINE HERE <<<<<<<<<<<<<<<<<<<<<<<<
 
-            // Function to load HTML partials (header/footer)
-            function loadPartial(url, elementId) {
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.text();
-                    })
-                    .then(html => {
-                        document.getElementById(elementId).innerHTML = html;
-                    })
-                    .catch(error => console.error(`Error loading partial ${url}:`, error));
-            }
 
-            // Load header and footer on every page
-            loadPartial('/partials/header.html', 'header-placeholder');
-            loadPartial('/partials/footer.html', 'footer-placeholder');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Common Functions for all pages ---
 
-            // --- Logic Specific to articles.html (Public Article Display) ---
-            const articlesContainer = document.getElementById("articles-container");
-            if (articlesContainer) { // Check if we are on the articles.html page
-                fetch("/api/articles")
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (!data || data.length === 0) {
-                            articlesContainer.innerHTML = "<p>No articles found.</p>";
-                            return;
-                        }
+        // Function to load HTML partials (header/footer)
+        function loadPartial(url, elementId) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById(elementId).innerHTML = html;
+                })
+                .catch(error => console.error(`Error loading partial ${url}:`, error));
+        }
 
-                        data.forEach(article => {
-                            const card = document.createElement("div");
-                            card.className = "article-card";
+        // Load header and footer on every page
+        // >>>>>>>>>>>>>>>>>>>>>> FIX PARTIALS PATHS HERE <<<<<<<<<<<<<<<<<<<<<<<<
+        // Assuming partials folder is directly inside 'frontend' alongside newspost.html
+        loadPartial('./partials/header.html', 'header-placeholder'); // Changed to './partials/'
+        loadPartial('./partials/footer.html', 'footer-placeholder'); // Changed to './partials/'
+        // >>>>>>>>>>>>>>>>>>>>>> FIX PARTIALS PATHS HERE <<<<<<<<<<<<<<<<<<<<<<<<
 
-                            let mediaHTML = "";
-                            let defaultImageSrc = "https://via.placeholder.com/400x200?text=No+Media";
 
-                            if (article.image_file) {
-                                mediaHTML = `<img src="/${article.image_file}" alt="Article Image">`;
-                            } else if (article.image_url) {
-                                mediaHTML = `<img src="${article.image_url}" alt="Article Image">`;
-                            } else if (article.video_file) {
+        // --- Logic Specific to articles.html (Public Article Display) ---
+        const articlesContainer = document.getElementById("articles-container");
+        if (articlesContainer) { // Check if we are on the articles.html page
+            // >>>>>>>>>>>>>>>>>>>>>> FIX API CALL HERE <<<<<<<<<<<<<<<<<<<<<<<<
+            fetch(`${API_BASE_URL}/api/articles`) // Use API_BASE_URL
+            // >>>>>>>>>>>>>>>>>>>>>> FIX API CALL HERE <<<<<<<<<<<<<<<<<<<<<<<<
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        articlesContainer.innerHTML = "<p>No articles found.</p>";
+                        return;
+                    }
+
+                    data.forEach(article => {
+                        const card = document.createElement("div");
+                        card.className = "article-card";
+
+                        let mediaHTML = "";
+                        let defaultImageSrc = "https://via.placeholder.com/400x200?text=No+Media";
+
+                        if (article.image_file) {
+                            // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH IMAGE PATHS <<<<<<<<<<<<<<<<<<<<<<<<
+                            // If your image_file paths are relative to the backend's file system
+                            // you might need to prepend API_BASE_URL here too, or serve them from a different public bucket.
+                            // For now, assuming they are relative to the frontend's 'uploads' if frontend manages uploads.
+                            mediaHTML = `<img src="/${article.image_file}" alt="Article Image">`;
+                            // If images are served from backend, it would be:
+                            // mediaHTML = `<img src="${API_BASE_URL}/uploads/${article.image_file.split('/').pop()}" alt="Article Image">`; // Adjust path as needed
+                            // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH IMAGE PATHS <<<<<<<<<<<<<<<<<<<<<<<<
+                        } else if (article.image_url) {
+                            mediaHTML = `<img src="${article.image_url}" alt="Article Image">`;
+                        } else if (article.video_file) {
+                             // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH VIDEO PATHS <<<<<<<<<<<<<<<<<<<<<<<<
+                            mediaHTML = `
+                                <video width="100%" height="200" controls>
+                                    <source src="/${article.video_file}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>`;
+                             // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH VIDEO PATHS <<<<<<<<<<<<<<<<<<<<<<<<
+                        } else if (article.video_url) {
+                            const youtubeId = extractYouTubeId(article.video_url);
+                            if (youtubeId) {
+                                // IMPORTANT: Use HTTPS for YouTube embeds if your site is HTTPS
                                 mediaHTML = `
-                                    <video width="100%" height="200" controls>
-                                        <source src="/${article.video_file}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>`;
-                            } else if (article.video_url) {
-                                const youtubeId = extractYouTubeId(article.video_url);
-                                if (youtubeId) {
-                                    mediaHTML = `
-                                        <iframe width="100%" height="200" src="http://googleusercontent.com/youtube.com/embed/${youtubeId}"
-                                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowfullscreen></iframe>`;
-                                } else {
-                                    mediaHTML = `<a href="${article.video_url}" target="_blank" rel="noopener noreferrer">Watch Video</a>`;
-                                }
+                                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/${youtubeId}"
+                                        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>`;
                             } else {
-                                mediaHTML = `<img src="${defaultImageSrc}" alt="No Media" class="placeholder">`;
+                                mediaHTML = `<a href="${article.video_url}" target="_blank" rel="noopener noreferrer">Watch Video</a>`;
                             }
+                        } else {
+                            mediaHTML = `<img src="${defaultImageSrc}" alt="No Media" class="placeholder">`;
+                        }
 
-                            const truncatedContent = article.content.length > 150 ?
-                                article.content.substring(0, 150) + "..." :
-                                article.content;
+                        const truncatedContent = article.content.length > 150 ?
+                            article.content.substring(0, 150) + "..." :
+                            article.content;
 
-                            card.innerHTML = `
-                                ${mediaHTML}
-                                <h3>${article.title}</h3>
-                                <p>${truncatedContent}</p>
-                                <small>${article.category || 'Uncategorized'}${article.subcategory ? ' → ' + article.subcategory : ''}</small>
-                            `;
+                        card.innerHTML = `
+                            ${mediaHTML}
+                            <h3>${article.title}</h3>
+                            <p>${truncatedContent}</p>
+                            <small>${article.category || 'Uncategorized'}${article.subcategory ? ' → ' + article.subcategory : ''}</small>
+                        `;
 
-                            articlesContainer.appendChild(card);
-                        });
-                    })
-                    .catch(error => {
-                        console.error("Error loading articles:", error);
-                        articlesContainer.innerHTML = "<p>Error loading articles. Please try again later.</p>";
+                        articlesContainer.appendChild(card);
                     });
+                })
+                .catch(error => {
+                    console.error("Error loading articles:", error);
+                    articlesContainer.innerHTML = "<p>Error loading articles. Please try again later.</p>";
+                });
 
                 // Helper to extract YouTube video ID
                 function extractYouTubeId(url) {
@@ -749,7 +771,9 @@
                 // Function to fetch and display articles in the admin list
                 const fetchAdminArticles = async () => {
                     try {
-                        const response = await fetch('/api/articles');
+                        // >>>>>>>>>>>>>>>>>>>>>> FIX API CALL HERE <<<<<<<<<<<<<<<<<<<<<<<<
+                        const response = await fetch(`${API_BASE_URL}/api/articles`); // Use API_BASE_URL
+                        // >>>>>>>>>>>>>>>>>>>>>> FIX API CALL HERE <<<<<<<<<<<<<<<<<<<<<<<<
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
@@ -793,7 +817,9 @@
 
                     const id = articleIdInput.value;
                     const method = id ? 'PUT' : 'POST';
-                    const url = id ? `/api/articles/${id}` : '/api/articles';
+                    // >>>>>>>>>>>>>>>>>>>>>> FIX API URL HERE <<<<<<<<<<<<<<<<<<<<<<<<
+                    const url = id ? `${API_BASE_URL}/api/articles/${id}` : `${API_BASE_URL}/api/articles`; // Use API_BASE_URL
+                    // >>>>>>>>>>>>>>>>>>>>>> FIX API URL HERE <<<<<<<<<<<<<<<<<<<<<<<<
 
                     const formData = new FormData(articleForm);
 
@@ -841,12 +867,20 @@
 
                     // Display current file info with remove checkbox
                     if (article.image_file) {
+                        // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH IMAGE PATHS <<<<<<<<<<<<<<<<<<<<<<<<
                         currentImageInfo.innerHTML = `Current: <a href="/${article.image_file}" target="_blank">${article.image_file.split('/').pop()}</a> <input type="checkbox" id="remove_image_file" name="remove_image_file"> Remove`;
+                        // Consider changing to:
+                        // currentImageInfo.innerHTML = `Current: <a href="${API_BASE_URL}/uploads/${article.image_file.split('/').pop()}" target="_blank">${article.image_file.split('/').pop()}</a> <input type="checkbox" id="remove_image_file" name="remove_image_file"> Remove`;
+                        // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH IMAGE PATHS <<<<<<<<<<<<<<<<<<<<<<<<
                     } else {
                         currentImageInfo.innerHTML = '';
                     }
                     if (article.video_file) {
+                        // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH VIDEO PATHS <<<<<<<<<<<<<<<<<<<<<<<<
                         currentVideoInfo.innerHTML = `Current: <a href="/${article.video_file}" target="_blank">${article.video_file.split('/').pop()}</a> <input type="checkbox" id="remove_video_file" name="remove_video_file"> Remove`;
+                        // Consider changing to:
+                        // currentVideoInfo.innerHTML = `Current: <a href="${API_BASE_URL}/uploads/${article.video_file.split('/').pop()}" target="_blank">${article.video_file.split('/').pop()}</a> <input type="checkbox" id="remove_video_file" name="remove_video_file"> Remove`;
+                        // >>>>>>>>>>>>>>>>>>>>>> POTENTIAL ISSUE WITH VIDEO PATHS <<<<<<<<<<<<<<<<<<<<<<<<
                     } else {
                         currentVideoInfo.innerHTML = '';
                     }
@@ -876,7 +910,9 @@
                         return;
                     }
                     try {
-                        const response = await fetch(`/api/articles/${id}`, {
+                        // >>>>>>>>>>>>>>>>>>>>>> FIX API CALL HERE <<<<<<<<<<<<<<<<<<<<<<<<
+                        const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, { // Use API_BASE_URL
+                        // >>>>>>>>>>>>>>>>>>>>>> FIX API CALL HERE <<<<<<<<<<<<<<<<<<<<<<<<
                             method: 'DELETE',
                         });
                         const text = await response.text();

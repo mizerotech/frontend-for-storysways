@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="assets/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="article-page">  <header class="header">
+<body class="article-page">
+    <header class="header">
         <div class="container header-content">
             <div class="logo">
                 <img src="pictures/SS Logo.png" alt="Story Sways Logo">
@@ -54,14 +55,19 @@
         </div>
     </header>
 
-    <main class="main-content container single-article-layout"> <section id="articleContent" class="main-article-content"> <p style="text-align: center; color: #999;">Loading article...</p>
+    <main class="main-content container single-article-layout">
+        <section id="articleContent" class="main-article-content">
+            <p style="text-align: center; color: #999;">Loading article...</p>
         </section>
 
-        <aside class="popular-categories-sidebar"> <div class="sidebar-ad hidden-ad ad-placeholder"> <h3>Advertisement</h3>
+        <aside class="popular-categories-sidebar">
+            <div class="sidebar-ad hidden-ad ad-placeholder">
+                <h3>Advertisement</h3>
                 <p>Your Ad Space 1</p>
                 <img src="https://via.placeholder.com/300x250?text=Your+Ad+Here" alt="Advertisement 1">
             </div>
-            <div class="sidebar-ad hidden-ad ad-placeholder"> <h3>Advertisement</h3>
+            <div class="sidebar-ad hidden-ad ad-placeholder">
+                <h3>Advertisement</h3>
                 <p>Your Ad Space 2</p>
                 <img src="https://via.placeholder.com/300x600?text=Another+Ad+Here" alt="Advertisement 2">
             </div>
@@ -111,6 +117,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            // **ADD THIS LINE:** Define the base URL for your Render backend API
+            const API_BASE_URL = "https://my-go-articles-api.onrender.com"; // **IMPORTANT: Replace with your actual Render URL**
+
             const articleContentDiv = document.getElementById('articleContent');
             const recommendedArticlesContainer = document.getElementById('recommended-articles-container');
             const urlParams = new URLSearchParams(window.location.search);
@@ -224,14 +233,14 @@
                 if (!url) return null;
                 let videoId = null;
 
-                // Standard YouTube URL regex (handles various http://youtube.com/watch?v= and http://youtu.be/ formats)
+                // Standard YouTube URL regex (handles various http://youtube.com/watch?v= formats)
                 const standardYouTubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
                 let match = url.match(standardYouTubeRegex);
                 if (match && match[1]) {
                     videoId = match[1];
                 } else {
                     // Specific googleusercontent.com proxy URL format check (adjusted for correctness)
-                    const googleUserContentRegex = /googleusercontent\.com\/youtube\.com\/(\w{11})/i; 
+                    const googleUserContentRegex = /googleusercontent\.com\/youtube\.com\/(\w{11})/i;
                     match = url.match(googleUserContentRegex);
                     if (match && match[1]) {
                         videoId = match[1];
@@ -259,7 +268,8 @@
                 articleContentDiv.innerHTML = `<p style="text-align: center; color: #999;">${translatableElements.loadingArticle[lang]}</p>`;
 
                 try {
-                    const response = await fetch(`/api/articles/${id}`);
+                    // **MODIFIED LINE:** Use API_BASE_URL for fetching the single article
+                    const response = await fetch(`${API_BASE_URL}/api/articles/${id}`);
                     if (!response.ok) {
                         if (response.status === 404) {
                             articleContentDiv.innerHTML = `<p style="text-align: center; color: #ffc107;">${translatableElements.articleNotFound[lang]}</p>`;
@@ -292,7 +302,7 @@
                     } else if (article.video_url) {
                         const youtubeId = extractYouTubeId(article.video_url);
                         if (youtubeId) {
-                            // Correct YouTube embed URL
+                            // **MODIFIED LINE:** Correct YouTube embed URL, removing the '4'
                             mediaHtml = `<div class="article-media video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                         } else {
                             mediaHtml = `<div class="article-media"><a href="${article.video_url}" target="_blank" rel="noopener noreferrer">${getTranslatedText({en: 'Watch Video', fr: 'Regarder la vidéo', rw: 'Reba Video'}, lang)}</a></div>`;
@@ -350,7 +360,8 @@
                     return;
                 }
 
-                let url = `/api/articles/search?${params.toString()}`;
+                // **MODIFIED LINE:** Use API_BASE_URL for fetching recommended articles
+                let url = `${API_BASE_URL}/api/articles/search?${params.toString()}`;
 
                 try {
                     const response = await fetch(url);
@@ -384,6 +395,7 @@
                         } else if (article.video_url) {
                             const youtubeId = extractYouTubeId(article.video_url);
                             if (youtubeId) {
+                                // **MODIFIED LINE:** Correct YouTube embed URL, removing the '4'
                                 mediaContent = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                             }
                         } else if (article.video_file) {
